@@ -1,0 +1,68 @@
+seed: 42
+output_dir: outputs
+
+dataset:
+  train_csv: null
+  val_csv: null
+  test_csv: null
+  train_root: data/raw/kaggle
+  val_root: data/raw/figshare
+  test_root: data/raw/brats2020
+  image_dirname: images
+  mask_dirname: masks
+  image_size: 256
+  num_workers: 4
+  in_channels: 1
+  num_classes: 1
+  preprocess:
+    skull_strip: true
+    n4_bias_correction: true
+    zscore: true
+
+augmentation:
+  train:
+    horizontal_flip: 0.5
+    shift_scale_rotate: 0.5
+    elastic: 0.2
+    brightness_contrast: 0.2
+    gauss_noise: 0.1
+  val: {}
+
+model:
+  in_channels: 1
+  num_classes: 1
+  base_channels: 32
+  transformer_dim: 256
+  transformer_heads: 8
+  transformer_layers: 2
+  state_space_dim: 256
+  dropout: 0.1
+  use_transformer: true
+  use_state_space: true
+  use_spatial_attention: true
+  use_channel_attention: true
+  use_cross_scale_fusion: true
+
+train:
+  epochs: 200
+  batch_size: 16
+  learning_rate: 1.0e-4
+  weight_decay: 1.0e-5
+  amp: true
+  grad_clip: 1.0
+  ema_decay: 0.999
+  early_stopping_patience: 25
+  warmup_epochs: 10
+  min_lr: 1.0e-6
+
+loss:
+  dice_weight: 1.0
+  tversky_weight: 0.7
+  boundary_weight: 0.5
+  attention_weight: 0.3
+  tversky_alpha: 0.3
+  tversky_beta: 0.7
+
+eval:
+  threshold: 0.5
+  save_predictions: true
